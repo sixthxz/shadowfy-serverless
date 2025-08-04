@@ -1,14 +1,6 @@
 let CLIENT_ID, REDIRECT_URI;
 let authInProgress = false;
 
-async function loadEnv() {
-  if (CLIENT_ID && REDIRECT_URI) return;
-  const res = await fetch('/env');
-  const data = await res.json();
-  CLIENT_ID = data.CLIENT_ID;
-  REDIRECT_URI = data.REDIRECT_URI;
-}
-
 export function generateRandomString(length) {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
