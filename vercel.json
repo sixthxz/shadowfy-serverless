@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/api/login"
+    },
+    {
+      "source": "/callback",
+      "destination": "/api/callback"
+    },
+    {
+      "source": "/refresh_token",
+      "destination": "/api/refresh_token"
+    }
+  ]
+}
