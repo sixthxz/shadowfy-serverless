@@ -1,4 +1,7 @@
-let CLIENT_ID, REDIRECT_URI;
+// replace with your ID and redirec URI (spotify dashboard)
+let CLIENT_ID = '79d7c3b9bf274a23ae5c0ccdb1ce7dbe';
+let REDIRECT_URI = 'https://shadowfy-serverless.vercel.app/api/callback';
+
 let authInProgress = false;
 
 export function generateRandomString(length) {
