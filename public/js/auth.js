@@ -1,4 +1,4 @@
-let CLIENT_ID = 'TU_CLIENT_ID';
+let CLIENT_ID = '79d7c3b9bf274a23ae5c0ccdb1ce7dbe';
 let REDIRECT_URI = 'https://shadowfy-serverless.vercel.app/api/callback';
 let authInProgress = false;
 
