@@ -1,33 +1,26 @@
-// replace with your ID and redirec URI (spotify dashboard)
-let CLIENT_ID = '79d7c3b9bf274a23ae5c0ccdb1ce7dbe';
+let CLIENT_ID = 'TU_CLIENT_ID';
 let REDIRECT_URI = 'https://shadowfy-serverless.vercel.app/api/callback';
-
 let authInProgress = false;
 
-export function generateRandomString(length) {
+function generateRandomString(length) {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
-  const values = crypto.getRandomValues(new Uint32Array(length));
+  const values = new Uint32Array(length);
+  window.crypto.getRandomValues(values);
   for (let i = 0; i < length; i++) {
     result += charset[values[i] % charset.length];
   }
   return result;
 }
 
-export async function sha256(plain) {
+async function generateCodeChallenge(codeVerifier) {
   const encoder = new TextEncoder();
-  const data = encoder.encode(plain);
-  return await crypto.subtle.digest('SHA-256', data);
-}
-
-export function base64urlencode(a) {
-  return btoa(String.fromCharCode(...new Uint8Array(a)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-export async function generateCodeChallenge(codeVerifier) {
-  const hashed = await sha256(codeVerifier);
-  return base64urlencode(hashed);
+  const data = encoder.encode(codeVerifier);
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
 }
 
 export async function redirectToAuthCodeFlow() {
@@ -44,25 +37,8 @@ export async function redirectToAuthCodeFlow() {
     scope: 'user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state',
     redirect_uri: REDIRECT_URI,
     code_challenge_method: 'S256',
-    code_challenge: codeChallenge,
+    code_challenge: codeChallenge
   });
 
   window.location = `https://accounts.spotify.com/authorize?${args}`;
-}
-
-export async function getAccessToken(code) {
-  const codeVerifier = localStorage.getItem('verifier');
-
-  const res = await fetch('/auth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      code,
-      code_verifier: codeVerifier,
-      redirect_uri: REDIRECT_URI
-    })
-  });
-
-  const data = await res.json();
-  return data.access_token;
 }
