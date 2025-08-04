@@ -28,8 +28,11 @@ export async function redirectToAuthCodeFlow() {
   authInProgress = true;
 
   const codeVerifier = generateRandomString(64);
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  const state = generateRandomString(16);
   localStorage.setItem('verifier', codeVerifier);
+  localStorage.setItem('auth_state', state);
+
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
 
   const args = new URLSearchParams({
     response_type: 'code',
@@ -37,7 +40,8 @@ export async function redirectToAuthCodeFlow() {
     scope: 'user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state',
     redirect_uri: REDIRECT_URI,
     code_challenge_method: 'S256',
-    code_challenge: codeChallenge
+    code_challenge: codeChallenge,
+    state
   });
 
   window.location = `https://accounts.spotify.com/authorize?${args}`;
