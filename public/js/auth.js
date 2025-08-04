@@ -28,7 +28,6 @@ export async function generateCodeChallenge(codeVerifier) {
 }
 
 export async function redirectToAuthCodeFlow() {
-  await loadEnv(); 
   if (authInProgress) return;
   authInProgress = true;
 
@@ -49,7 +48,6 @@ export async function redirectToAuthCodeFlow() {
 }
 
 export async function getAccessToken(code) {
-  await loadEnv(); 
   const codeVerifier = localStorage.getItem('verifier');
 
   const res = await fetch('/auth/token', {
